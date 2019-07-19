@@ -87,7 +87,7 @@ class Signup extends React.Component {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} >
               <TextField
                 autoComplete="fname"
                 name="firstName"
@@ -95,22 +95,11 @@ class Signup extends React.Component {
                 required
                 fullWidth
                 id="userName"
-                label="First Name"
+                label="User Name"
                 onChange = {e => this.setState({userName : e.target.value})}
                 autoFocus
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                onChange = {e => this.setState({lastName : e.target.value})}
-              />
-            </Grid>
+            </Grid>            
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
