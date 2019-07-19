@@ -17,11 +17,11 @@ export const toggleMap = () => dispatch => {
     });
 }
 
-export const loggedIn = ({_id, name, email}) => dispatch => {
+export const loggedIn = ({_id, userName, email}) => dispatch => {
     // console.log(`user loggedIn`);
     dispatch({
         type: USER_LOGGED_IN,
-        payload: {_id, name, email}
+        payload: {_id, userName, email}
     });
     localStorage.setItem('reduxState', JSON.stringify(  {user: store.getState().user}   ));
 }

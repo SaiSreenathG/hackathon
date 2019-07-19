@@ -20,16 +20,16 @@ class TodoItem extends Component {
     //    console.log(this.props)
     // }
     render() {
-        const {id,title} = this.props.todo
+        const {_id,desc} = this.props.todo
         return (
             // <div style={{ backgroundColor: '#f4f4f4'}}>
             // <div style={itemStyle}>
             <div style={this.getStyle()}>
                <p>
                    {/* this.markComplete.bind(this) or arrow function */}
-                <input type="checkbox" onChange={this.props.markComplete.bind(this,id)}/> {'  '}
-               {title}
-               <button onClick={this.props.delTodo.bind(this,id)} style ={btnStyle}>x</button>
+                <input type="checkbox" onChange={this.props.markComplete.bind(this,_id)}/> {'  '}
+               {desc}
+               <button onClick={this.props.delTodo.bind(this,_id)} style ={btnStyle}>x</button>
                </p> 
             </div>
         );

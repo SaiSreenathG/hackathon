@@ -13,6 +13,7 @@ export default function (state = initialState, action) {
                 ...state,
                 _id: action.payload._id,
                 name: action.payload.name,
+                userName:  action.payload.userName,
                 email: action.payload.email,
             }
         case USER_LOGOUT:

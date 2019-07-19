@@ -65,7 +65,7 @@ class LoginPage extends React.Component {
         })
         let json = await res.json();
         if(json && json.status === 'success'){
-          this.props.loggedIn(json.data);
+          this.props.loggedIn(json.data[0][0]);
           this.props.history.push('/dashboard');
         }else{
           alert(json.message);
@@ -78,6 +78,7 @@ class LoginPage extends React.Component {
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
+                
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />

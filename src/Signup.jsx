@@ -49,7 +49,6 @@ class Signup extends React.Component {
     }
 
     handleSubmit = async () => {
-        console.log("Here")
         let res = await fetch('https://us-central1-voting-app-241814.cloudfunctions.net/saveUser', {
           method: 'POST',
           headers: {
@@ -65,11 +64,11 @@ class Signup extends React.Component {
             password: this.state.password
           })
         })
-        let json = await res.json();
-        if(json && json.status === 'success'){
+        let text = await res.text();
+        if(text === 'Success'){
           this.props.history.push('/');
         }else{
-          alert(json.message);
+          alert(text);
         }
         // console.log(json);
       }

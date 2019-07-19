@@ -41,50 +41,99 @@ const styles = theme => ({
 class Dashboard extends React.Component {
 
   state = {
+    currentTodo: '',
     todos:[
       // {id:uuid.v4(),title:"wake up at 7am",completed:false},
       // {id:uuid.v4(),title:"sleep at 11pm",completed:false}
     ]
   }
 
-  componentDidMount(){
-    axios.get("https:/jsonplaceholder.typicode.com/todos?_limit=20")
-    .then(res=>this.setState({todos:res.data}))
+  handleLogout = () => {
+    this.props.logout();
+    this.props.history.push('/');
+  }
+
+
+
+  async componentWillMount() {
+    let res = await fetch(`https://us-central1-voting-app-241814.cloudfunctions.net/TodoList?name=${this.props.userName}`,
+    { headers: {
+       "Access-Control-Allow-Origin": "*", 
+       'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT', 
+       "Access-Control-Allow-Credentials": "true" 
+      }
+    }
+    );
+
+    let json = await res.json();
+    console.log('jJJJJson', json.data[0]);
+
+    this.setState({todos: json.data[0]});
+
+
+    // axios.get(`https://us-central1-voting-app-241814.cloudfunctions.net/TodoList?name=${this.props.userName}`, { headers: { "Access-Control-Allow-Origin": "*", 'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT', "Access-Control-Allow-Credentials": "true" }, })
+    //   .then(
+    //     res => this.setState(
+    //       { 
+    //         todos: res.data[0]
+    //       }
+
+    //     ))
   }
   //toggle complete
   markComplete = (id) => {
-    this.setState({ todos: this.state.todos.map((todo)=>{
-      if(todo.id == id){
-        todo.completed = !todo.completed
+    if(!this.props.userId){
+      this.props.history.push('/');
+    }
+    axios.get("https://us-central1-voting-app-241814.cloudfunctions.net/TodoUpdate?id=${id}",{headers: {"Access-Control-Allow-Origin": "*",'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT',"Access-Control-Allow-Credentials": "true"},}).
+    then(res=>{this.setState({ todos: this.state.todos.map((todo)=>{
+      if(todo._id == id){
+        todo.status = !todo.status
       }
       return todo;
     })
+  })
   });  
   }
 
   //delete todo
   delTodo = (id) =>{
     // [... is a spread operator used to copy the contents
-
-    axios.delete("https:/jsonplaceholder.typicode.com/todos/${id}")
-    .then(res=>this.setState({todos: [...this.state.todos.filter(todo=>todo.id !== id)]}));
-    
-
+    if(!this.props.userId){
+      this.props.history.push('/');
+    }
+    axios.delete("https://us-central1-voting-app-241814.cloudfunctions.net/TodoDelete?id=${id}",{headers: {"Access-Control-Allow-Origin": "*",'Access-Control-Allow-Methods': 'GET,HEAD,OPTIONS,POST,PUT,DELETE',"Access-Control-Allow-Credentials": "true"},})
+    .then(res=>this.setState({todos: [...this.state.todos.filter(todo=>todo._id !== id)]}));
   }
 
   //add todo
-  addTodo = (title)=>{
-    console.log(title);
-    // const newTodo = {
-    //   id:uuid.v4(),
-    //   title,
-    //   // in es6 no need title:title
-    //   completed:false
-    // };
-    axios.post("https:/jsonplaceholder.typicode.com/todos",{
-      title,
-      completed:false
-    }).then(res=>this.setState({todos:[...this.state.todos,res.data]}));
+  addTodo = async ()=>{
+   
+    let desc = this.state.currentTodo;
+    //console.log( 'addTodo',  desc);
+
+
+    let res = await fetch('https://us-central1-voting-app-241814.cloudfunctions.net/TodoSave', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods' : 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token'
+          },
+          body: JSON.stringify({
+            desc,
+            
+            name: this.props.userName
+          })
+        });
+
+        await res.text();
+
+
+    return false;
+   
     
   }
   render(){
@@ -94,7 +143,36 @@ class Dashboard extends React.Component {
     <div className="App">
     <div className='container'>
       <Header/>
-      <Route exact path="/" render={props=>(
+
+      {/* <AddTodo addTodo={this.addTodo}/> */}
+
+      <input type='text' name='desc' 
+        value={this.state.currentTodo} 
+        onChange={e => this.setState({currentTodo: e.target.value})} 
+        style={{flex:'10',padding:'5'}} 
+        placeholder='Add Todo ....'/>
+      <input onClick={this.addTodo} className='btn' style={{flex: '1'}} value = 'Submit'/>
+
+
+
+      { (this.state.todos && this.state.todos.length > 0) &&
+
+          <>
+          <h1>TODOs</h1>
+          <Todos todos={this.state.todos} 
+          markComplete={this.markComplete} 
+          delTodo={this.delTodo}
+          />
+
+          </>
+          
+
+
+      }
+      
+
+
+      {/* <Route exact path="/" render={props=>(
         <React.Fragment>
           <AddTodo addTodo={this.addTodo}/>
           <Todos todos={this.state.todos} 
@@ -102,8 +180,8 @@ class Dashboard extends React.Component {
           delTodo={this.delTodo}/>
         </React.Fragment>
       )} />
-      <Route path="/about" component={About}/>
-      
+       */}
+      <Route><Button onClick={this.handleLogout}>Logout</Button></Route>
     </div>
     </div>
     </Router>
@@ -112,7 +190,7 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  userId: state.user._id
+  userName: state.user.userName
 });
 
 export default withRouter(connect(mapStateToProps, { logout })(withStyles(styles)(Dashboard)));
