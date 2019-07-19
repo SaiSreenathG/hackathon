@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/hackathon/static/js/main.a2bcf817.chunk.js",
+    "main.js.map": "/hackathon/static/js/main.a2bcf817.chunk.js.map",
+    "runtime~main.js": "/hackathon/static/js/runtime~main.170e41e9.js",
+    "runtime~main.js.map": "/hackathon/static/js/runtime~main.170e41e9.js.map",
+    "static/js/2.015d49fd.chunk.js": "/hackathon/static/js/2.015d49fd.chunk.js",
+    "static/js/2.015d49fd.chunk.js.map": "/hackathon/static/js/2.015d49fd.chunk.js.map",
+    "index.html": "/hackathon/index.html",
+    "precache-manifest.5a5d9da6991f0c7f869902aeb7ce1a76.js": "/hackathon/precache-manifest.5a5d9da6991f0c7f869902aeb7ce1a76.js",
+    "service-worker.js": "/hackathon/service-worker.js"
+  }
+}
